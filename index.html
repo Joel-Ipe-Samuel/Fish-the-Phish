@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon3.png">
+    <title>Fish the Phish</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @font-face{
+           font-family: 'BalooChettan2';
+            src: url('CDF Fonts/BalooChettan2-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body{
+            font-family: 'BalooChettan2', sans-serif;
+            background-color: #bdf3ae;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px; /* Space for footer */
+        }
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            width: 100%;
+        }
+        .game-container{
+            min-height: 80vh;
+        }
+        .email-card{
+            min-height: 300px;
+        }
+        .button-group button{
+            transition: transform 0.2s;
+        }
+        .button-group button:hover{
+            transform: translateY(-2px);
+        }
+        #message-box{
+            background-color: rgb(255, 255, 255);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+            margin-top: 2rem;
+        }
+        footer {
+            position: relative;
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+            background-color: #bdf3ae;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 0.5rem;
+                padding-bottom: 60px;
+                padding-top: 4rem; /* Space for logo */
+            }
+
+            .main-wrapper {
+                padding: 0.5rem;
+            }
+
+            .game-container {
+                width: 100%;
+                padding: 1.25rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                min-height: auto;
+                margin-top: 0;
+            }
+
+            #email-card {
+                font-size: 0.9rem;
+                padding: 1rem;
+                min-height: 250px;
+            }
+
+            #email-sender {
+                font-size: 1.1rem;
+                word-break: break-word;
+            }
+
+            #email-subject {
+                font-size: 0.9rem;
+            }
+
+            #email-body {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .button-group button {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+
+            #message-box {
+                width: 90%;
+                max-width: 90%;
+                padding: 1.5rem;
+                max-height: none;
+                overflow-y: visible;
+                margin-top: 1.5rem;
+            }
+
+            #correction-screen > div {
+                width: 90%;
+                padding: 1.5rem;
+            }
+
+            footer {
+                font-size: 0.75rem;
+                padding: 0.75rem 0.5rem;
+                position: relative;
+                margin-top: 1.5rem;
+            }
+
+            footer a {
+                display: inline-block;
+                margin: 0.25rem;
+            }
+
+            img[alt="CDF Logo"] {
+                width: 100px !important;
+                height: auto !important;
+                top: 0.5rem !important;
+                right: 0.5rem !important;
+            }
+
+            h1 {
+                font-size: 1.75rem !important;
+            }
+
+            #start-screen p {
+                font-size: 1rem;
+            }
+
+            #start-button {
+                width: 100%;
+                font-size: 1rem;
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!--CDF logo top right-->
+    <img src="CITIZEN_DIGITAL_LOGO.webp" alt="CDF Logo" 
+        class="absolute top-4 right-4 object-contain z-50"
+        style="width: 200px; height: auto;">
+
+    <div class="main-wrapper">
+        <!--Game UI-->
+        <div class="game-container w-full max-w-lg bg-white rounded-xl shadow-2xl p-6 md:p-10" 
+         style="box-shadow: 0 12px 40px rgba(0,0,0,0.35);">
+        
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 text-center">Fish the Phish</h1>
+            <!--Score, Time, and Progress-->
+            <div class="flex justify-between w-full mb-6 text-lg font-semibold text-gray-700">
+                <span>Score:<span id="score-display">0</span></span>
+                <span>Time:<span id="time-display">120</span>s</span>
+                <span>Progress:<span id="progress-display">0</span>/<span id="total-emails">10</span></span>
+            </div>
+
+            <!--Start Screen-->
+            <div id="start-screen" class="text-center p-6 md:p-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Can you find the Phishes and the scams?</h2><br>
+                <p class="text-lg text-gray-600 mb-6">
+                    You're an intern at Cyberosity INC.<br><br>
+                    You have <strong>2 minutes</strong> to quickly sort incoming emails. Keep your eyes peeled for all details and categorize each email as <strong>Legitimate</strong>, <strong>Spam</strong> or <strong>Phishing</strong>. <br><br>Good luck! :)
+                </p>
+                <button id="start-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                    Start Game
+                </button>
+            </div>
+
+            <!--Game Screen-->
+            <div id="game-screen" class="hidden w-full">
+                <div id="email-card" class="email-card w-full bg-gray-100 rounded-lg shadow-md p-6 mb-8 text-left transition-transform duration-300">
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-3">
+                            <img id="email-icon" src="email.png" alt="Email Icon" class="h-8 w-8">
+                        </span>
+                        <h3 class="font-bold text-xl md:text-2xl" id="email-sender"></h3>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-2" id="email-subject"></p>
+                    <div id="email-body" class="text-gray-800 text-base leading-relaxed break-words"></div>
+                </div>
+
+                <div class="button-group grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                    <button id="legit-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg">Legitimate</button>
+                    <button id="spam-button" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full shadow-lg">Spam</button>
+                    <button id="phishing-button" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg">Phishing</button>
+                </div>
+            </div>
+
+            <!--End Screen-->
+            <div id="end-screen" class="hidden w-full flex justify-center">
+                <div id="message-box">
+                    <h3 id="message-title" class="text-4xl font-extrabold mb-6 text-gray-900 flex justify-center"></h3>
+                    <p id="message-content" class="text-lg text-gray-700 mb-8 text-center"></p>
+                    
+                    <!--End screen Buttons-->
+                    <div class="flex justify-center gap-4 mb-8 mx-2">
+                        <button id="restart-button" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full font-bold shadow-lg">
+                            Play Again
+                        </button>
+                        <button id="exit-button" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full font-bold shadow-lg">
+                            Exit
+                        </button>
+                    </div>  
+
+                    <!--Resources-->
+                    <div class="flex justify-between items-center">
+                        <a href="https://hoxhunt.com/guide/phishing-trends-report" target="_blank" class="mx-2 text-sm font-semibold text-blue-600 hover:underline">Read more about Phishing</a>
+                        <a href="https://hoxhunt.com/guide/phishing-trends-report" target="_blank" class="mx-1 text-sm font-semibold text-blue-600 hover:underline">Read more about Spam</a>
+                        <a href="https://hoxhunt.com/guide/phishing-trends-report" target="_blank" class="mx-2 text-sm font-semibold text-blue-600 hover:underline">Read more about the answers</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Correction Screen-->
+    <div id="correction-screen" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center">
+            <h2 class="text-2xl font-bold mb-4 text-red-600">Oops! That was incorrect.</h2>
+            <p id="correction-message" class="text-gray-700 mb-6"></p>
+            <button id="continue-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <!--Footer-->
+    <footer class="text-sm text-black-600">
+        Made by <a href="https://Linkedin.com/in/Joel-Ipe-Samuel" target="_blank" class="text-blue-600 hover:underline">Joel Ipe Samuel</a> |
+        <a href="https://citizendigitalfoundation.org" target="_blank" class="mx-1 text-black-500 hover:text-blue-700">CDF Website</a>
+        <a href="https://citizendigitalfoundation.org/privacy-policy/" target="_blank" class="mx-1 text-black-500 hover:text-blue-700">Privacy Policy</a>
+        <a href="https://citizendigitalfoundation.org/terms-and-conditions/" target="_blank" class="mx-0 text-black-500 hover:text-blue-700">Terms & Conditions</a> | Hosted with Netlify -
+        <a href="https://www.netlify.com/legal/terms-of-use/" target="_blank" class="mx-1 text-black-500 hover:text-blue-700">Terms & Conditions</a> and 
+        <a href="https://www.netlify.com/privacy" target="_blank" class="mx-1 text-black-500 hover:text-blue-700">Privacy Policy</a>
+    </footer>
+
+    <script>
+        //Game variables
+        const GAME_DURATION = 120; //seconds
+        const CORRECT_SCORE = 10;
+        const WRONG_SCORE = 5; //score deduct
+        const TOTAL_EMAILS_PER_GAME = 10;
+
+        //Email data. The editable parts of the email are the sender, subject, body and icon
+        const emails = [
+            //Legitimate
+            { 
+                type: '5saf2s09', 
+                sender: 'Spotify <no-reply@spotify.com>', 
+                subject: 'Your yearly Spotify Wrapped is here!', 
+                body: "Hi John! \nYour year in music is ready. Click the link to see your top songs and artists from 2023.\n\nhttps://spotify.com/wrapped",
+                icon: 'spotify.png',
+                correction:'The logo and the email address are legitimate. The link is also correct as it directs to the official Spotify domain.'
+            },
+            { 
+                type: '5saf2s09', 
+                sender: 'Amazon <no-reply@amazon.com>', 
+                subject: 'Your recent order has been shipped.', 
+                body: 'Hello, Your Amazon order of #123-4567-0000 of 1 item labelled "Gardening Tools - Shovel and spade" has been shipped and will arrive within 2-3 business days. Track your package here.\n\nhttps://amazon.com/trackorder',
+                icon: 'amazon.png',
+                correction:'The logo and the email address are legitimate. The package tracking link directs to the official Amazon website too.'
+            },
+            { 
+                type: '5saf2s09', 
+                sender: 'Airtel <no-reply@airtel.com>', 
+                subject: 'Transaction in progress', 
+                body: 'This is an automated message from Airtel. Your transaction is currently being processed. You can check the status on our official website.\n\nhttps://airtel.in',
+                icon: 'airtel.png',
+                correction:'The logo and the email address are legitimate. The link directs to the Airtel website too.'
+            },
+            { 
+                type: '5saf2s09', 
+                sender: 'Zomato Order', 
+                subject: 'Your Zomato order from Catz Cafe', 
+                body: 'Hi John,\n Thank you for ordering from Catz Cafe via Zomato. Your order is being prepared and will be delivered to you shortly.',
+                icon: 'zomato.png',
+                correction:'This is just a regular order confirmation email from Zomato. No issues here.'
+            },
+            { 
+                type: '5saf2s09', 
+                sender: 'Federal Bank', 
+                subject: 'Updation of account details', 
+                body: 'Dear John Issac, \nYour newly created savings account is almost done. Please visit your nearest Federal Bank branch with valid ID proof and address proof to complete the process. Or visit our website to enter the details. \nThank you for choosing Federal Bank.\n\nhttps://federalbank.co.in',
+                icon: 'federalactual.png',
+                correction:'This logo and email body are legitimate. The link also directs to the official Federal Bank website.'
+            },
+
+            //Spam
+            { 
+                type: 'h5bfns92', 
+                sender: 'Adobe Acrobat <mail@mail.adobe.com>', 
+                subject: 'Wanna come back to Adobe Acrobat?', 
+                body: 'We got great offers worth e-signing off of! \n\n Sign up for Adobe Acrobat today and get 15% off on your first year subscription.',
+                correction:'The sender is still sending emails despite the user being unsubscribed.'
+            },
+            { 
+                type: 'h5bfns92', 
+                sender: 'Max Fashion <mail@maxfashion.in>', 
+                subject: 'The Summer Sale is here!', 
+                body: 'Guess what, Fashionista? The Summer Sale is live now at Max Fashion. \nShop now and get up to 50% off on selected items!',
+                icon: 'max.png',
+                correction:'The kind of spam where you give your email to a brand once and they keep sending you promotional emails forever.'
+            },
+            { 
+                type: 'h5bfns92', 
+                sender: 'GenkyAI <admin@genkyai.org>', 
+                subject: 'The best AI tool for you!', 
+                body: 'Need better images? More natural text? GenkyAI! \n\nSign up today and get your team a 14-day free trial of our premium plan. No credit card required!',
+                icon: 'genky.png',
+                correction:'This is promotional mail that is probably based on your recent searches or interests.'
+            },
+            { 
+                type: 'h5bfns92', 
+                sender: 'KingTutorial <webmaster@kingtutorial.com>', 
+                subject: 'September Skills Surge - Enroll Now!', 
+                body: 'Wanna make that resume less boring? Enroll in our new courses on web development, data science, and more. Limited seats available!',
+                icon: 'kingtutorial.png',
+                correction:'This is a promotional email that you might have signed up for once, but now it keeps sending you emails.'
+            },
+
+            //Phishing
+            { 
+                type: 'laj28dhj', 
+                sender: 'Apple Support', 
+                subject: 'Your Apple ID has been locked for security reasons', 
+                body: 'Dear customer, we have detected unusual login activity on your account. To unlock your account, please verify your details immediately by clicking here.\n\nhttp://bit.ly/appleverify',
+                icon: 'apple.png',
+                correction: 'This is a PHISHING attempt. Apple will never ask you to click suspicious links. Added to that the link is a shortened URL which is suspicious.'
+            },
+            { 
+                type: 'laj28dhj', 
+                sender: 'NetFlix', 
+                subject: 'Your payment was declined', 
+                body: 'We could not process your last payment. To continue enjoying your favorite movies and shows, please update your billing info here: http://bit.ly/NetflixBilling.',
+                icon: 'netflix.png',
+                correction:'The subject and body look legit, but the icon is fake and the link is a shortened URL which is suspicious.'
+            },
+            { 
+                type: 'laj28dhj', 
+                sender: 'Federal Bank', 
+                subject: 'Urgent: Verify your account information', 
+                body: 'We are updating our security protocols. Please click on the link below to verify your account information and avoid any interruptions to your service.\n\nhttp://bit.ly/FederalBankVerify',
+                icon: 'federal.png',
+                correction:'This is a PHISHING attempt. Federal Bank has set standards for their emails and this isn\'t one of them.'
+            },
+            { 
+                type: 'laj28dhj', 
+                sender: 'alex.s172@gmail.com', 
+                subject: 'John click the link to avoid extra charges', 
+                body: 'John, enter your account details in the Google drive link below to avoid extra ATM charges!\n\nhttp://bit.ly/VerifyNow',
+                correction:'This is clearly a phisher impersonating a relative or co-worker to get personal details.'
+            }
+        ];
+
+        //UI variables
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endScreen = document.getElementById('end-screen');
+        const scoreDisplay = document.getElementById('score-display');
+        const timeDisplay = document.getElementById('time-display');
+        const progressDisplay = document.getElementById('progress-display');
+        const totalEmailsDisplay = document.getElementById('total-emails');
+        const emailSender = document.getElementById('email-sender');
+        const emailSubject = document.getElementById('email-subject');
+        const emailBody = document.getElementById('email-body');
+        const startButton = document.getElementById('start-button');
+        const messageBox = document.getElementById('message-box');
+        const messageTitle = document.getElementById('message-title');
+        const messageContent = document.getElementById('message-content');
+        const restartButton = document.getElementById('restart-button');
+        const legitButton = document.getElementById('legit-button');
+        const spamButton = document.getElementById('spam-button');
+        const phishingButton = document.getElementById('phishing-button');
+        const exitButton = document.getElementById('exit-button');
+        const correctionScreen = document.getElementById('correction-screen');
+        const correctionMessageEl = document.getElementById('correction-message');
+        
+        let score = 0;
+        let timeLeft = GAME_DURATION;
+        let emailCount = 0;
+        let currentEmail = null;
+        let timerInterval = null;
+        let emailQueue = [];
+
+        function startTimer(){
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                if (timeLeft <= 0){
+                    clearInterval(timerInterval);
+                    endGame("Time is up!");
+                }
+            }, 1000);
+        }
+
+        //pausing and resuming timer for when user gets an answr wrong
+        function pauseTimer(){
+            clearInterval(timerInterval);
+        }
+
+        function resumeTimer(){
+            startTimer();
+        }
+
+        //Shuffle array for randomness
+        function shuffle(array){
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showEmail(email){
+            document.getElementById("email-sender").innerText = email.sender;
+            document.getElementById("email-subject").innerText = email.subject;
+            document.getElementById("email-body").innerText = email.body;
+
+            const iconElement = document.getElementById("email-icon");
+            if (email.icon) {
+                iconElement.src = email.icon;  //Use specific icon if provided
+            } else {
+                iconElement.src = "email.png"; //Default icon fallback
+            }
+        }
+
+        function startGame(){
+            score = 0;
+            timeLeft = GAME_DURATION;
+            emailCount = 0;
+            emailQueue = shuffle([...emails]).slice(0, TOTAL_EMAILS_PER_GAME);
+            
+            //Update UI
+            scoreDisplay.textContent = score;
+            timeDisplay.textContent = timeLeft;
+            progressDisplay.textContent = emailCount;
+            totalEmailsDisplay.textContent = TOTAL_EMAILS_PER_GAME;
+            startScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            correctionScreen.classList.add('hidden');
+
+            startTimer();
+
+            loadNextEmail();
+        }
+
+        function loadNextEmail(){
+            if (emailQueue.length === 0) {
+                endGame('You sorted all the emails!');
+                return;
+            }
+
+            currentEmail = emailQueue.pop();
+            emailCount++;
+
+            showEmail(currentEmail);
+
+            progressDisplay.textContent = emailCount;
+        }
+
+        function handleChoice(userChoice){
+            const isCorrect = userChoice === currentEmail.type;
+
+            if (isCorrect){
+                score += CORRECT_SCORE;
+                if (score < 0) score = 0;
+                scoreDisplay.textContent = score;
+                // proceed immediately
+                if (emailCount >= TOTAL_EMAILS_PER_GAME){
+                    // finished
+                    endGame('You sorted all the emails!');
+                    return;
+                }
+                loadNextEmail();
+            } 
+            else{
+                //wrong: deduct points, pause, show correction for THIS email (do not load next yet)
+                score -= WRONG_SCORE;
+                if (score < 0) score = 0;
+                scoreDisplay.textContent = score;
+
+                // pause and show correction overlay for currentEmail
+                pauseTimer();
+                correctionMessageEl.textContent = currentEmail.correction || 'Incorrect — take note of the red flags.';
+                correctionScreen.classList.remove('hidden');
+                // DO NOT call loadNextEmail here; that happens when the user clicks Continue
+            }
+        }
+        
+        function endGame(message){
+            clearInterval(timerInterval);
+            gameScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            correctionScreen.classList.add('hidden');
+
+            messageTitle.textContent = "Game Over!";
+            let rank = "";
+            if (score >= 75){
+                rank = "You're a CyberSecurity Master! 🛡️";
+            } else if (score >= 40){
+                rank = "Quite a Security Enthusiast! 🔐";
+            } else{
+                rank = "You got Phished...🐟";
+            }
+
+            messageContent.innerHTML = `${message}<br>Your final score is ${score}<br>${rank}`;
+        }
+
+        //Event listeners
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', startGame);
+        legitButton.addEventListener('click', () => handleChoice('5saf2s09'));
+        spamButton.addEventListener('click', () => handleChoice('h5bfns92'));
+        phishingButton.addEventListener('click', () => handleChoice('laj28dhj'));
+
+        exitButton.addEventListener('click', () => {
+            // hide end screen and return to start
+            endScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            // clear timer just in case
+            clearInterval(timerInterval);
+            timeLeft = GAME_DURATION;
+            timeDisplay.textContent = timeLeft;
+        });
+
+        document.getElementById("continue-btn").addEventListener("click", () => {
+            correctionScreen.classList.add("hidden");
+            // resume timer and then move to next email
+            resumeTimer();
+            // after continuing, if we've already exhausted the queue, loadNextEmail will handle endGame
+            loadNextEmail();
+        });
+    </script>
+</body>
+</html>
