@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--change favicon image and title here-->
     <link rel="icon" type="image/png" href="favicon3.png">
     <title>Fish the Phish</title>
+    <!--tailwindCSS link - change UI at every tag instead of adding to stylesheet-->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--fonts fetched from google fonts using embed link-->
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400..800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Baloo Chettan 2', sans-serif; }
@@ -18,7 +21,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-[#bdf3ae] flex flex-col">
-    <!-- Header -->
+    <!--Header with CDF SVG logo on the right and name of the game on the left-->
     <header class="bg-white shadow-md py-5 px-8 flex justify-between items-center flex-shrink-0">
         <div class="text-3xl md:text-4xl font-extrabold text-gray-900">Fish the Phish</div>
         <a href="https://citizendigitalfoundation.org" target="_blank" class="h-[60px] flex-shrink-0">
@@ -39,11 +42,11 @@
         </a>
     </header>
 
-    <!-- Main Content -->
+    <!--Main Game container-->
     <div class="flex-1 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
         <div class="bg-white rounded-2xl shadow-2xl p-4 max-w-[600px] w-full my-4 overflow-y-auto">
             
-            <!-- Start Screen -->
+            <!--Starting screen-->
             <div id="start-screen" class="p-8">
                 <h2 class="text-2xl font-extrabold text-gray-900 mb-8 text-center">Can you find the Phishes and the spams?</h2>
                 <p class="text-lg text-gray-600 leading-relaxed mb-8">
@@ -53,9 +56,9 @@
                 <button id="start-button" class="py-4 px-8 rounded-full font-bold text-lg border-0 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 bg-blue-500 hover:bg-blue-600 text-white">Start Game</button>
             </div>
 
-            <!-- Game Screen -->
+            <!--Game Screen when clicked on "Start Game"-->
             <div id="game-screen" class="hidden">
-                <!-- Stats Bar -->
+                <!--Score, Time and Progress Bar - When changing either time (in seconds) or total emails in script, change the UI here too-->
                 <div class="grid grid-cols-3 gap-4 mb-8 pb-4 border-b-2 border-gray-200">
                     <div class="text-center">
                         <div class="text-sm text-gray-600 font-semibold">Score</div>
@@ -71,7 +74,7 @@
                     </div>
                 </div>
 
-                <!-- Email Card -->
+                <!--Email card-->
                 <div class="bg-gray-100 rounded-xl p-8 mb-6 min-h-[200px] max-h-[300px] overflow-y-auto">
                     <div class="flex items-center gap-3 mb-4">
                         <div id="email-icon" class="w-8 h-8 flex-shrink-0">
@@ -85,7 +88,7 @@
                     <div class="text-gray-700 leading-relaxed whitespace-pre-wrap" id="email-body"></div>
                 </div>
 
-                <!-- Buttons -->
+                <!--Category buttons-->
                 <div class="grid grid-cols-3 gap-2 md:gap-4">
                     <button id="legit-button" class="py-3 px-4 md:py-3.5 md:px-6 rounded-full font-bold text-sm md:text-base border-0 cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 bg-green-500 hover:bg-green-600 text-white whitespace-nowrap">Legitimate</button>
 
@@ -95,9 +98,10 @@
                 </div>
             </div>
 
-            <!-- End Screen -->
+            <!--Game End screen-->
             <div id="end-screen" class="text-center p-8 hidden">
                 <h2 id="message-title" class="text-4xl font-extrabold text-gray-900 mb-4">Game Over!</h2>
+                <!--message content editable in script-->
                 <p id="message-content" class="text-xl text-gray-600 mb-8"></p>
                 
                 <div class="flex gap-4 justify-center mb-8">
@@ -109,6 +113,7 @@
                     </button>
                 </div>
 
+                <!--resources-->
                 <div class="flex flex-wrap gap-4 justify-center pt-6 border-t-2 border-gray-200">
                     <a href="https://www.thequint.com/quintlab/scamguard-interactive-immersive-guides-how-to-tackle-online-scams-digital-social-media-frauds/index.html" target="_blank" class="text-blue-500 text-sm font-semibold no-underline hover:underline">
                         Read more about Scams
@@ -129,6 +134,7 @@
     <div id="correction-screen" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100] hidden">
         <div class="bg-white rounded-2xl p-8 max-w-[500px] w-[90%] shadow-2xl">
             <h2 class="text-3xl font-extrabold text-red-500 mb-4">Oops! That was incorrect.</h2>
+            <!--correction message editable in messages array-->
             <p id="correction-message" class="text-gray-600 leading-relaxed mb-6"></p>
             <button id="continue-btn" class="w-full py-3 px-8 rounded-full font-bold border-0 cursor-pointer transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 bg-blue-500 hover:bg-blue-600 text-white">
                 Continue
@@ -136,23 +142,26 @@
         </div>
     </div>
 
-    <!--FOOTER-->
+    <!--Footer-->
     <footer class="bg-[#bdf3ae] py-4 text-center text-sm text-gray-700 flex-shrink-0">
         Made by <a href="https://Linkedin.com/in/Joel-Ipe-Samuel" target="_blank" class="text-blue-500 no-underline hover:underline mr-1">Joel Ipe Samuel</a> |
         <a href="https://citizendigitalfoundation.org" target="_blank" class="text-blue-500 no-underline hover:underline mr-2 ml-1">CDF Website</a>
         <a href="https://citizendigitalfoundation.org/privacy-policy/" target="_blank" class="text-blue-500 no-underline hover:underline mr-2">Privacy Policy</a>
-        <a href="https://citizendigitalfoundation.org/terms-and-conditions/" target="_blank" class="text-blue-500 no-underline hover:underline mr-1">Terms & Conditions</a> |
-        <a href="https://www.netlify.com/privacy" target="_blank" class="text-blue-500 no-underline hover:underline ml-1">Hosted with Vercel - Privacy Policy</a>
+        <a href="https://citizendigitalfoundation.org/terms-and-conditions/" target="_blank" class="text-blue-500 no-underline hover:underline mr-1">Terms & Conditions</a>
     </footer>
 
     <script>
-        // Game variables
+        //Game variables - change time, point addition and deduction and total emails per game here
         const GAME_DURATION = 120;
         const CORRECT_SCORE = 10;
         const WRONG_SCORE = 5;
         const TOTAL_EMAILS_PER_GAME = 10;
 
-        // Email data
+        //Email data - change the type of email(legit, spam, phishing), the sender, subject, body, the email icon (PNG and SVG accepted) and the correction for the email
+        //innerHTML is enabled for the array
+        //if email icon is PNG, name the tag as "icon". The tag would be "iconSVG" if the icon is an SVG 
+        
+        //types -> [5saf2s09, Legitimate], [h5bfns92, spam], [laj28dhj, phishing]
         const emails = [
             { 
                 type: '5saf2s09', 
@@ -529,7 +538,6 @@
             }
         ];
 
-        // UI Elements
         const startScreen = document.getElementById('start-screen');
         const gameScreen = document.getElementById('game-screen');
         const endScreen = document.getElementById('end-screen');
@@ -560,6 +568,7 @@
         let timerInterval = null;
         let emailQueue = [];
 
+        //randomiser for emails
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -588,6 +597,7 @@
             startTimer();
         }
 
+        //
         function showEmail(email) {
             emailSender.textContent = email.sender;
             emailSubject.textContent = email.subject;
@@ -641,6 +651,7 @@
         function handleChoice(userChoice) {
             const isCorrect = userChoice === currentEmail.type;
 
+            //point addition logic
             if (isCorrect) {
                 score += CORRECT_SCORE;
                 scoreDisplay.textContent = score;
@@ -652,10 +663,12 @@
                  loadNextEmail();
             } 
             else {
+                //point deduction logic
                 score -= WRONG_SCORE;
                 if (score < 0) score = 0;
                 scoreDisplay.textContent = score;
 
+                //pausing timer when correction page is up
                 pauseTimer();
                 correctionMessage.innerHTML = currentEmail.correction || 'Incorrect — take note of the red flags.';
                 correctionScreen.classList.remove('hidden');
@@ -681,7 +694,6 @@
             messageContent.innerHTML = `${message}<br>Your final score is <strong>${score}</strong><br>${rank}`;
         }
 
-        // Event Listeners
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', startGame);
         legitButton.addEventListener('click', () => handleChoice('5saf2s09'));
