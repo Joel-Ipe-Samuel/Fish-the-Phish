@@ -2,7 +2,7 @@
 
 ## A web-based game developed with HTML, Tailwind CSS and Javascript, showcasing the different phishing tactics in emails. 
 
-Some of the features of the game include the following: 
+Some of the features of the game include the following... 
 
 * A timed attempt to differentiate randomized emails as **Legitimate**, **Spam** or as **Phishing** attempts, which can be toggled in the source code. 
 * A score system with 10 points being awarded for classifying the email in the right category,
